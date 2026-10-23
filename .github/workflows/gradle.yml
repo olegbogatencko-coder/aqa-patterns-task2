@@ -25,7 +25,5 @@ jobs:
         run: sleep 5
 
       - name: Build with Gradle
-        # Добавляем аргументы для Chrome:
-        # --no-sandbox: отключает песочницу (обязательно для CI)
-        # --disable-dev-shm-usage: решает проблемы с нехваткой памяти
-        run: ./gradlew test --info -Dselenide.headless=true -Dchromeoptions.args=--no-sandbox,--disable-dev-shm-usage
+        # Добавляем --headless=new и --disable-gpu
+        run: ./gradlew test --info -Dselenide.headless=true -Dchromeoptions.args=--no-sandbox,--disable-dev-shm-usage,--headless=new,--disable-gpu
