@@ -17,7 +17,7 @@ class AuthTest {
 
     @BeforeEach
     void setup() {
-        open("http://localhost:9999"); // Открываем страницу входа в браузере
+        open("http://localhost:9999");
     }
 
     @Test
@@ -25,24 +25,24 @@ class AuthTest {
     void shouldSuccessfulLoginIfRegisteredActiveUser() {
         var registeredUser = getRegisteredUser("active");
 
-        $("[name=login]").setValue(registeredUser.getLogin());
-        $("[name=password]").setValue(registeredUser.getPassword());
-        $("button[type=button]").click(); // Кнопка "Войти"
+        $("[data-test-id='login'] input").setValue(registeredUser.getLogin());
+        $("[data-test-id='password'] input").setValue(registeredUser.getPassword());
+        $("button[type=button]").click();
 
-        // Проверка, что мы вошли
+        // Используем h2, так как элемента dashboard на странице нет
         $("h2").shouldHave(text("Личный кабинет")).shouldBe(visible);
     }
 
     @Test
     @DisplayName("Should get error message if login with not registered user")
     void shouldGetErrorIfNotRegisteredUser() {
-        var notRegisteredUser = getUser("active"); // Пользователь не в базе
+        var notRegisteredUser = getUser("active");
 
-        $("[name=login]").setValue(notRegisteredUser.getLogin());
-        $("[name=password]").setValue(notRegisteredUser.getPassword());
+        $("[data-test-id='login'] input").setValue(notRegisteredUser.getLogin());
+        $("[data-test-id='password'] input").setValue(notRegisteredUser.getPassword());
         $("button[type=button]").click();
 
-        $(".notification").shouldHave(text("Ошибка! Неверно указан логин или пароль")).shouldBe(visible);
+        $("[data-test-id='error-notification']").shouldHave(text("Ошибка! Неверно указан логин или пароль")).shouldBe(visible);
     }
 
     @Test
@@ -50,11 +50,11 @@ class AuthTest {
     void shouldGetErrorIfBlockedUser() {
         var blockedUser = getRegisteredUser("blocked");
 
-        $("[name=login]").setValue(blockedUser.getLogin());
-        $("[name=password]").setValue(blockedUser.getPassword());
+        $("[data-test-id='login'] input").setValue(blockedUser.getLogin());
+        $("[data-test-id='password'] input").setValue(blockedUser.getPassword());
         $("button[type=button]").click();
 
-        $(".notification").shouldHave(text("Ошибка! Пользователь заблокирован")).shouldBe(visible);
+        $("[data-test-id='error-notification']").shouldHave(text("Ошибка! Пользователь заблокирован")).shouldBe(visible);
     }
 
     @Test
@@ -63,11 +63,11 @@ class AuthTest {
         var registeredUser = getRegisteredUser("active");
         var wrongLogin = getRandomLogin();
 
-        $("[name=login]").setValue(wrongLogin); // Неверный логин
-        $("[name=password]").setValue(registeredUser.getPassword());
+        $("[data-test-id='login'] input").setValue(wrongLogin);
+        $("[data-test-id='password'] input").setValue(registeredUser.getPassword());
         $("button[type=button]").click();
 
-        $(".notification").shouldHave(text("Ошибка! Неверно указан логин или пароль")).shouldBe(visible);
+        $("[data-test-id='error-notification']").shouldHave(text("Ошибка! Неверно указан логин или пароль")).shouldBe(visible);
     }
 
     @Test
@@ -76,10 +76,10 @@ class AuthTest {
         var registeredUser = getRegisteredUser("active");
         var wrongPassword = getRandomPassword();
 
-        $("[name=login]").setValue(registeredUser.getLogin());
-        $("[name=password]").setValue(wrongPassword); // Неверный пароль
+        $("[data-test-id='login'] input").setValue(registeredUser.getLogin());
+        $("[data-test-id='password'] input").setValue(wrongPassword);
         $("button[type=button]").click();
 
-        $(".notification").shouldHave(text("Ошибка! Неверно указан логин или пароль")).shouldBe(visible);
+        $("[data-test-id='error-notification']").shouldHave(text("Ошибка! Неверно указан логин или пароль")).shouldBe(visible);
     }
 }
